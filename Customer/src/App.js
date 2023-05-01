@@ -47,7 +47,7 @@ function App() {
     }
   }
 
-  const contractAddress = '0x818ddF70Ff1db1d3Db70b68F32aFfe3E094A6718';
+  const contractAddress = '0x6cE51B289E8C5c84099C1B99f72F107B62051bd8'; //'0x818ddF70Ff1db1d3Db70b68F32aFfe3E094A6718'; //
   // const [currentAccount, setCurrentAccount] = useState(null);
 
   // Connect to the Polygon network using a web3 provider
@@ -97,6 +97,7 @@ function App() {
         coverageLimit: policy.coverageLimit,
         coveragePeriod: policy.coveragePeriod,
         termsAndConditions: policy.termsAndConditions,
+        policyName: policy.name,
         name: name,
         Address: "address",
         contactInformation: "contactInfo"
@@ -110,10 +111,14 @@ function App() {
         },
       })
         .then((response) => response.json())
-        .then((data) => console.log(data));
+        .then((data) => {
+          console.log(data);
+          alert("A request has sent to buy this policy. Now wait for approval of this request.");
+        });
     }
     else {
       console.log("Either address is null or name is null");
+      alert("Either address is null or name is null");
     }
 
   }
@@ -229,18 +234,22 @@ function App() {
 
             } catch (error) {
               console.error('Error in claiming the policy', error);
+              alert("Got an error: ", error);
             }
             // console.log('Claim Submitted1.');
           }
           else if (result[1] == false) {
             console.log("This policy is not active.");
+            alert("This policy is not active.")
           }
           else {
             console.log("You already have claimed for this policy");
+            alert("You already have claimed for this policy");
           }
         })
         .catch((error) => {
           console.error(error);
+          alert("Got an error: ", error);
         });
     }
 
@@ -269,18 +278,22 @@ function App() {
 
                 } catch (error) {
                   console.error('Error in paying premium', error);
+                  alert("Got an error: ", error);
                 }
               })
               .catch((error) => {
                 console.error(error);
+                alert("Got an error: ", error);
               });
           }
           else if (result[1] == false) {
             console.log("This policy is not active.");
+            alert("This policy is not active.");
           }
         })
         .catch((error) => {
           console.error(error);
+          alert("Got an error: ", error);
         });
     }
   }

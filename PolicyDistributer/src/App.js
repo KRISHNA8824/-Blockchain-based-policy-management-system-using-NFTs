@@ -53,7 +53,11 @@ function App() {
       },
     })
       .then((response) => response.json())
-      .then((data) => {console.log(data.myData); setPolicies([...policies, data.savedData]);});
+      .then((data) => { 
+        console.log(data.myData); 
+        setPolicies([...policies, data.savedData]);
+        alert("Added!");
+      });
 
     // console.log(myPolicy);
 
@@ -70,7 +74,10 @@ function App() {
       method: 'DELETE',
     })
       .then(response => response.json())
-      .then(data => console.log(data))
+      .then(data =>{
+        console.log(data);
+        alert("Deleted!");
+      })
       .catch(error => console.error(error));
   }
 
@@ -84,7 +91,7 @@ function App() {
   }, []);
 
 
-  const contractAddress = '0x818ddF70Ff1db1d3Db70b68F32aFfe3E094A6718';
+  const contractAddress = '0x6cE51B289E8C5c84099C1B99f72F107B62051bd8'; //'0x818ddF70Ff1db1d3Db70b68F32aFfe3E094A6718';
   const [currentAccount, setCurrentAccount] = useState(null);
   // Connect to the Polygon network using a web3 provider
   const web3 = new Web3(window.ethereum);
@@ -112,7 +119,7 @@ function App() {
 
       // Call the mint function on the contract to mint a new token
       try {
-        contract.methods.mint(policyApprovalRequest.currentAccount, policyApprovalRequest.premium, policyApprovalRequest.deductibles, policyApprovalRequest.coverageLimit, policyApprovalRequest.coveragePeriod, policyApprovalRequest.termsAndConditions, policyApprovalRequest.name, policyApprovalRequest.Address, policyApprovalRequest.contactInformation).send({
+        contract.methods.mint(policyApprovalRequest.currentAccount, policyApprovalRequest.premium, policyApprovalRequest.deductibles, policyApprovalRequest.coverageLimit, policyApprovalRequest.coveragePeriod, policyApprovalRequest.policyName, policyApprovalRequest.termsAndConditions, policyApprovalRequest.name, policyApprovalRequest.Address, policyApprovalRequest.contactInformation).send({
           from: currentAccount,
           gasPrice: gasPriceInWei
         }).then((result) => {
@@ -148,7 +155,10 @@ function App() {
       method: 'DELETE',
     })
       .then(response => response.json())
-      .then(data => console.log(data))
+      .then(data =>{
+        console.log(data);
+        alert("Request rejected!");
+      })
       .catch(error => console.error(error));
 
     setPolicyApprovalRequests(policyApprovalRequests.filter((e) => {
@@ -232,27 +242,42 @@ function App() {
                 gasPrice: gasPriceInWei
               }).then(() => {
                 console.log('Claim rejected.');
+                fetch(`http://localhost:3009/claimRequest/${claimRequest._id}`, {
+                  method: 'DELETE',
+                })
+                  .then(response => response.json())
+                  .then(data =>{
+                    console.log(data);
+                    alert("Request rejected!")
+                  })
+                  .catch(error => console.error(error));
+
+                setClaimRequests(claimRequests.filter((e) => {
+                  return e !== claimRequest;
+                }));
               });
 
             } catch (error) {
               console.error('Error minting token', error);
+              alert("Got an error:", error);
             }
-            console.log('Claim Submitted1.');
           }
           else {
             console.log("Either this policy is not active or invalid claim request.");
+            fetch(`http://localhost:3009/claimRequest/${claimRequest._id}`, {
+              method: 'DELETE',
+            })
+              .then(response => response.json())
+              .then(data =>{
+                console.log(data);
+                alert("Request rejected!");
+              })
+              .catch(error => console.error(error));
+
+            setClaimRequests(claimRequests.filter((e) => {
+              return e !== claimRequest;
+            }));
           }
-
-          fetch(`http://localhost:3009/claimRequest/${claimRequest._id}`, {
-            method: 'DELETE',
-          })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error(error));
-
-          setClaimRequests(claimRequests.filter((e) => {
-            return e !== claimRequest;
-          }));
 
         })
         .catch((error) => {
@@ -271,25 +296,25 @@ function App() {
       .catch(error => console.error(error));
   }, []);
 
-  const onBurn = (tokenId)=> {
+  const onBurn = (tokenId) => {
     console.log("onBurn button is tapped.", tokenId);
 
     if (currentAccount) {
 
-            // Call the submitClaim function on the contract to submit a claim
-            try {
-              contract.methods.burn(tokenId).send({
-                from: currentAccount,
-                gasPrice: gasPriceInWei
-              }).then(() => {
-                console.log('NFT has burned successfully.');
-                alert("NFT has burned successfully.");
-              });
+      // Call the submitClaim function on the contract to submit a claim
+      try {
+        contract.methods.burn(tokenId).send({
+          from: currentAccount,
+          gasPrice: gasPriceInWei
+        }).then(() => {
+          console.log('NFT has burned successfully.');
+          alert("NFT has burned successfully.");
+        });
 
-            } catch (error) {
-              console.error('Error burning NFT', error);
-              alert('Got an error.');
-            }
+      } catch (error) {
+        console.error('Error burning NFT', error);
+        alert('Got an error:', error);
+      }
 
     }
   }

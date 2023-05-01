@@ -182,12 +182,17 @@
 			},
 			{
 				"internalType": "string",
+				"name": "_policyName",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
 				"name": "_termsAndConditions",
 				"type": "string"
 			},
 			{
 				"internalType": "string",
-				"name": "_name",
+				"name": "_policyHolderName",
 				"type": "string"
 			},
 			{
@@ -630,6 +635,11 @@
 				"internalType": "string",
 				"name": "",
 				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -839,6 +849,11 @@
 		],
 		"name": "policies",
 		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
 			{
 				"internalType": "uint256",
 				"name": "premiums",

@@ -7,6 +7,7 @@ const myDataSchema = new Schema({
     deductibles: { type: Number, required: true },
     coverageLimit: { type: Number, required: true },
     coveragePeriod: { type: Number, required: true },
+    policyName: { type: String, required: true },
     termsAndConditions: { type: String, required: true },
     name: { type: String, required: true },
     Address: { type: String, required: true },
