@@ -77,7 +77,7 @@ function App() {
   const userObject = storedUser ? JSON.parse(storedUser) : null;
   const [name, setName] = useState(userObject ? userObject.name : null);
   useEffect(() => {
-    if (storedUser && userObject!=null) {
+    if (storedUser && userObject != null) {
       setName(userObject.name);
     } else {
       setName(null);
@@ -170,10 +170,11 @@ function App() {
                       coverageLimit: result[2],
                       coveragePeriod: result[3],
                       totalPremiumPaid: result[4],
-                      termsAndConditions: result[5],
-                      name: result[6],
-                      Address: result[7],
-                      contactInformation: result[8]
+                      policyName: result[5],
+                      termsAndConditions: result[6],
+                      policyHolderName: result[7],
+                      Address: result[8],
+                      contactInformation: result[9]
                     }
                     return myPolicy;
                   })

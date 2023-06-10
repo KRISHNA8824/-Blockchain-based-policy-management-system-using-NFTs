@@ -53,8 +53,8 @@ function App() {
       },
     })
       .then((response) => response.json())
-      .then((data) => { 
-        console.log(data.myData); 
+      .then((data) => {
+        console.log(data.myData);
         setPolicies([...policies, data.savedData]);
         alert("Added!");
       });
@@ -74,7 +74,7 @@ function App() {
       method: 'DELETE',
     })
       .then(response => response.json())
-      .then(data =>{
+      .then(data => {
         console.log(data);
         alert("Deleted!");
       })
@@ -101,16 +101,30 @@ function App() {
   const gasPriceInGwei = 50;
   const gasPriceInWei = web3.utils.toWei(gasPriceInGwei.toString(), 'Gwei');
 
-  if (window.ethereum) {
-    // request access to user's accounts
-    window.ethereum.request({ method: 'eth_requestAccounts' }).then((accounts) => {
-      // get the current account address
-      setCurrentAccount(accounts[0]);
-      // console.log(currentAccount);
-    }).catch((error) => {
-      console.error(error);
-    });
-  }
+  // if (window.ethereum) {
+  //   // request access to user's accounts
+  //   window.ethereum.request({ method: 'eth_requestAccounts' }).then((accounts) => {
+  //     // get the current account address
+  //     setCurrentAccount(accounts[0]);
+  //     // console.log(currentAccount);
+  //   }).catch((error) => {
+  //     console.error(error);
+  //   });
+  // }
+
+  useEffect(() => {
+    if (window.ethereum) {
+      // request access to user's accounts
+      window.ethereum.request({ method: 'eth_requestAccounts' })
+        .then((accounts) => {
+          // get the current account address
+          setCurrentAccount(accounts[0]);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, []);
 
   const onPolicyApprove = (policyApprovalRequest) => {
     console.log("Policy approval button is clicked.", policyApprovalRequest);
@@ -155,7 +169,7 @@ function App() {
       method: 'DELETE',
     })
       .then(response => response.json())
-      .then(data =>{
+      .then(data => {
         console.log(data);
         alert("Request rejected!");
       })
@@ -246,7 +260,7 @@ function App() {
                   method: 'DELETE',
                 })
                   .then(response => response.json())
-                  .then(data =>{
+                  .then(data => {
                     console.log(data);
                     alert("Request rejected!")
                   })
@@ -268,7 +282,7 @@ function App() {
               method: 'DELETE',
             })
               .then(response => response.json())
-              .then(data =>{
+              .then(data => {
                 console.log(data);
                 alert("Request rejected!");
               })
@@ -290,11 +304,42 @@ function App() {
 
   const [claimRequests, setClaimRequests] = useState([]);
   useEffect(() => {
-    fetch(`http://localhost:3009/claimRequest/`)
-      .then(response => response.json())
-      .then(data => setClaimRequests(data))
-      .catch(error => console.error(error));
-  }, []);
+    if (currentAccount) {
+      fetch(`http://localhost:3009/claimRequest/`)
+        .then(response => response.json())
+        .then(data => {
+          data.map((item, index) => {
+
+            contract.methods.getInfo1(item.tokenId).call()
+              .then((result) => {
+                const claimRequest = {
+                  _id: item._id,
+                  tokenId: item.tokenId,
+                  premium: result[0],
+                  deductibles: result[1],
+                  coverageLimit: result[2],
+                  coveragePeriod: result[3],
+                  totalPremiumPaid: result[4],
+                  policyName: result[5],
+                  termsAndConditions: result[6],
+                  policyHolderName: result[7],
+                  Address: result[8],
+                  contactInformation: result[9]
+                };
+                console.log(claimRequest);
+
+                // Update claimRequests state with a new array containing the new claim request
+                setClaimRequests(prevClaimRequests => [...prevClaimRequests, claimRequest]);
+              })
+              .catch((error) => {
+                console.error(error);
+              });
+          });
+
+        })
+        .catch(error => console.error(error));
+    }
+  }, [currentAccount]);
 
   const onBurn = (tokenId) => {
     console.log("onBurn button is tapped.", tokenId);
@@ -322,7 +367,7 @@ function App() {
   return (
     <>
       <Router>
-        <Header title="Admin" />
+        <Header title="PolicyDistributer" />
 
         <Routes>
 

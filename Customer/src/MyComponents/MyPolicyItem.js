@@ -3,6 +3,7 @@ import React from 'react'
 export const MyPolicyItem = ({myPolicy, onClaim, onPayPremium}) => {
   return (
     <div>
+      <h6>Name of policy: {myPolicy.policyName}</h6>
       <h6>Terms & Conditions: {myPolicy.termsAndConditions}</h6>
       <h6> Premium : {myPolicy.premium}, Deductibles: {myPolicy.deductibles}</h6>
       <h6> Coverage Limit : {myPolicy.coverageLimit}, Coverage Period: {myPolicy.coveragePeriod}</h6>

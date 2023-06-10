@@ -30,7 +30,7 @@ export const BurnNFT = (props) => {
                     <input type="number" value = {tokenId} onChange = {(e)=> {setTokenId(e.target.value)}} className="form-control" id="tokenId"/>
                 </div>
 
-                <button type="submit" className="btn btn-sm btn-success">Add Policy</button>
+                <button type="submit" className="btn btn-sm btn-success">Burn NFT</button>
             </form>
         </div>
     )

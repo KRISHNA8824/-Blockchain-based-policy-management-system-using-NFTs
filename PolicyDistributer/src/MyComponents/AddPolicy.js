@@ -31,7 +31,7 @@ export const AddPolicy = (props) => {
     return (
         
         <div className='container custom-container' style = { myStyle }>
-            <h3 className='my-3'>Add a policy</h3>
+            <h3 className='my-3'>Add a type of policy</h3>
             <form onSubmit={submit}>
 
                 <div className="mb-3">
